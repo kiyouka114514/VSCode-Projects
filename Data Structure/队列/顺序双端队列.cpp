@@ -5,11 +5,11 @@ using namespace std;
 typedef struct
 {
     int *data; // 队列空间
-    int f;     // 仿队首指针
-    int r;     // 仿队尾指针
-} Queue;
+    int f;     // 仿左端指针
+    int r;     // 仿右端指针
+} Deque;
 // 初始化
-Queue InitQueue(Queue q)
+Deque InitDeque(Deque q)
 {
     q.data = new int[maxx];
     q.f = 0; // 指向待删除
@@ -17,7 +17,7 @@ Queue InitQueue(Queue q)
     return q;
 }
 // 判空
-int IsEmpty(Queue *q)
+int IsEmpty(Deque *q)
 {
     if (q->f == q->r)
     {
@@ -25,8 +25,8 @@ int IsEmpty(Queue *q)
     }
     return 0;
 }
-// 入队
-void EnQueue(Queue *q, int x)
+// 右端入队
+void RightEnDeque(Deque *q, int x)
 {
     // 判满
     if ((q->r + 1) % maxx == q->f)
@@ -34,11 +34,23 @@ void EnQueue(Queue *q, int x)
         cout << "队列已满" << endl;
         return;
     }
-    q->data[q->r] = x;
+    q->data[q->r] = x;          // 先放，再动指针
     q->r = (q->r + 1) % maxx;
 }
-// 出队
-void DeQueue(Queue *q)
+// 左端入队
+void LeftEnDeque(Deque *q, int x)
+{
+    // 判满
+    if ((q->f +maxx- 1) % maxx == q->r)
+    {
+        cout << "队列已满" << endl;
+        return;
+    }
+    q->f = (q->f+maxx - 1) % maxx; // 先动指针，后放，左右不能相同
+    q->data[q->f] = x;
+}
+// 左端出队
+void LeftDe(Deque *q)
 {
     // 判空
     if (IsEmpty(q) == 1)
@@ -50,34 +62,52 @@ void DeQueue(Queue *q)
     q->f = (q->f + 1) % maxx;
     cout << "出队数据为" << s << endl;
 }
-
+// 右端出队
+void RightDe(Deque *q)
+{
+    // 判空
+    if (IsEmpty(q) == 1)
+    {
+        cout << "队空" << endl;
+        return;
+    }
+    q->r = (q->r + maxx-1) % maxx;
+    int s = q->data[q->r];
+    cout << "出队数据为" << s << endl;
+}
 int main()
 {
-    Queue q;
-    q = InitQueue(q);
+    Deque q;
+    q = InitDeque(q);
     int op;
     do
     {
         cout << "请输入操作" << endl;
-        cout << "1.入队" << endl;
-        cout << "2.出队" << endl;
+        cout << "1.左端入队" << endl;
+        cout << "2.右端入队" << endl;
+        cout << "3.左端出队" << endl;
+        cout << "4.右端出队" << endl;
         cout << "0.退出" << endl;
         cin >> op;
         if (op == 1)
         {
             int n;
-            cout << "输入要入队的个数和数据" << endl;
+            cout << "输入要入队的数据" << endl;
             cin >> n;
-            for (int i = 0; i < n; i++)
-            {
-                int m;
-                cin >> m;
-                EnQueue(&q, m);
-            }
+            LeftEnDeque(&q, n);
         }
         else if (op == 2)
         {
-            DeQueue(&q);
+            int n;
+            cout << "输入要入队的数据" << endl;
+            cin >> n;
+            RightEnDeque(&q, n);
+        }
+        else if(op==3){
+            LeftDe(&q);
+        }
+        else if(op==4){
+            RightDe(&q);
         }
         else
         {
