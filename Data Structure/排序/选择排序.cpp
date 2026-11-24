@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-// 选择排序，时间复杂度都是O(n^2),空间复杂度O(1)
+// 选择排序，时间复杂度都是O(n^2),空间复杂度O(1)，不稳定
 void Swap(int *a,int *b)
 {
     int c = *a;
